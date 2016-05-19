@@ -9,7 +9,7 @@ VOLD=$(egrep -o "[0-9\.]+" ~/mattermost/version.txt)
 echo $VOLD
 
 # query available version
-VNEW=$(wget -O- https://www.mattermost.org/download/ --no-check-certificate | egrep -o 'Edition v([0-9\.]+)'  | sort -V  | tail -1 | egrep -o "[0-9\.]+")
+VNEW=$(wget -O- https://www.mattermost.org/download/ --no-check-certificate | egrep -o 'Edition v([0-9\.]+)'  | tail -1 | egrep -o "[0-9\.]+")
 echo $VNEW
 
 # query db settings
