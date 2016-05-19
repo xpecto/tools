@@ -18,6 +18,12 @@ rm -R mattermost-$VOLD
 mkdir mattermost-$VOLD
 mv ~/mattermost/* ~/mattermost_bak/mattermost-$VOLD/
 
+# backup db
+USER=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -1 | tail -1)
+PASS=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -2 | tail -1)
+DB=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -6 | tail -1)
+mysqldump -u$USER -p$PASS $DB > ~/mattermost_bak/mattermost-$VOLD/dbdump.sql
+
 # download and unpack                (to ~/mattermost_bak/mattermost-update/)
 cd ~/mattermost_bak/
 rm -R mattermost-update
