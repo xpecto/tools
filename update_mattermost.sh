@@ -12,16 +12,16 @@ echo $VOLD
 VNEW=$(wget -O- https://www.mattermost.org/download/ --no-check-certificate | egrep -o 'Edition v([0-9\.]+)'  | sort -V  | tail -1 | egrep -o "[0-9\.]+")
 echo $VNEW
 
+# query db settings
+USER=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -1 | tail -1)
+PASS=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -2 | tail -1)
+DB=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -6 | tail -1)
+
 # backup running                     (to ~/mattermost_bak/mattermost-X.X.X/)
 cd ~/mattermost_bak/
 rm -R mattermost-$VOLD
 mkdir mattermost-$VOLD
 mv ~/mattermost/* ~/mattermost_bak/mattermost-$VOLD/
-
-# backup db
-USER=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -1 | tail -1)
-PASS=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -2 | tail -1)
-DB=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -6 | tail -1)
 mysqldump -u$USER -p$PASS $DB > ~/mattermost_bak/mattermost-$VOLD/dbdump.sql
 
 # download and unpack                (to ~/mattermost_bak/mattermost-update/)
