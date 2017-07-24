@@ -1,5 +1,5 @@
 # mattermost updater
-# 
+#
 # running in ~/mattermost/
 # data in    ~/mattermost_data/
 # backup in  ~/mattermost_bak/
@@ -9,8 +9,10 @@ VOLD=$(egrep -o "[0-9\.]+" ~/mattermost/version.txt)
 echo $VOLD
 
 # query available version
-VNEW=$(wget -O- https://www.mattermost.org/download/ --no-check-certificate | egrep -o 'Edition v([0-9\.]+)'  | tail -1 | egrep -o "[0-9\.]+")
+VNEW=$(wget -O- https://docs.mattermost.com/administration/changelog.html --no-check-certificate | egrep -o 'Release v([0-9\.]+)'  | sort -V  | tail -1 | egrep -o "[0-9\.]+")
 echo $VNEW
+
+read -rsp $"Press enter to update from $VOLD to $VNEW\n"
 
 # query db settings
 USER=$(cat ~/mattermost/config/config.json | jq .SqlSettings.DataSource | egrep -o "[[:alnum:]]+" | head -1 | tail -1)
