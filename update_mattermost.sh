@@ -15,7 +15,7 @@ VOLD=$(egrep -o "[0-9\.]+" ~/mattermost/version.txt)
 echo $VOLD
 
 # query available version
-VNEW=$(wget -O- https://docs.mattermost.com/administration/changelog.html --no-check-certificate | egrep -o 'Release v([0-9\.]+)'  | sort -V$
+VNEW=$(wget -O- https://docs.mattermost.com/administration/changelog.html --no-check-certificate | egrep -o 'Release v([0-9\.]+)'  | sort -V  | tail -1 | egrep -o "[0-9\.]+")
 echo $VNEW
 
 # check version
