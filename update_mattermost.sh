@@ -4,14 +4,27 @@
 # data in    ~/mattermost_data/
 # backup in  ~/mattermost_bak/
 
+# check username
+if [ "$(whoami)" != "xpecto" ]; then
+        echo "Script must be run as user: xpecto"
+        exit 1
+fi
+
 # query running version
 VOLD=$(egrep -o "[0-9\.]+" ~/mattermost/version.txt)
 echo $VOLD
 
 # query available version
-VNEW=$(wget -O- https://docs.mattermost.com/administration/changelog.html --no-check-certificate | egrep -o 'Release v([0-9\.]+)'  | sort -V  | tail -1 | egrep -o "[0-9\.]+")
+VNEW=$(wget -O- https://docs.mattermost.com/administration/changelog.html --no-check-certificate | egrep -o 'Release v([0-9\.]+)'  | sort -V$
 echo $VNEW
 
+# check version
+if [[ "$VNEW" < "$VOLD" || "$VNEW" = "$VOLD" ]]; then
+        echo "no new version found: Current $VOLD, New $VNEW"
+        exit 1
+fi
+
+# user prompt
 read -rsp $"Press enter to update from $VOLD to $VNEW\n"
 
 # query db settings
@@ -41,3 +54,4 @@ echo $VNEW > ~/mattermost/version.txt
 
 # done
 echo you need to stop/start mattermost
+
